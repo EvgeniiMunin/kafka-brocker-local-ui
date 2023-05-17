@@ -41,3 +41,5 @@ if __name__ == "__main__":
 
     producer.flush()
     producer.close()
+
+# consumer output val1

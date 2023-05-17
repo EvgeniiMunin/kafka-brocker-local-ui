@@ -1,12 +1,6 @@
-# link https://developer.confluent.io/quickstart/kafka-docker/?build=pipelines
-# works broker
-# works producer/ consumer
-# msgs wrtie/ read from the topic
-
 version: '3'
 services:
   zookeeper:
-    #image: confluentinc/cp-zookeeper:7.3.2
     image: confluentinc/cp-zookeeper:5.4.1
     container_name: zookeeper
     environment:
@@ -14,7 +8,6 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   broker:
-    #image: confluentinc/cp-kafka:7.3.2
     image: confluentinc/cp-kafka:5.4.1
     container_name: broker
     ports:
@@ -29,33 +22,28 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      #KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      #KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_REQUEST_TIMEOUT_MS: 60000
 
-# kafka-producer working
   kafka-producer:
     image: producer-app:1.0
     container_name: kafka-producer
     depends_on:
       - broker
-    build: ./
+    build: ..
     command: python3 ./producer.py
 
-# https://github.com/github-ismail-chafai/kafka-to-s3/blob/master/docker-compose.yml
-# schema-registry built
-
-  #schema-registry:
-  #  image: confluentinc/cp-schema-registry:7.3.2
-  #  container_name: schema-registry
-  #  depends_on:
-  #    - zookeeper
-  #    - broker
-  #  ports:
-  #    - 8081:8081
-  #  environment:
-  #    SCHEMA_REGISTRY_HOST_NAME: schema-registry
-  #    SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+  schema-registry:
+    image: confluentinc/cp-schema-registry:5.4.1
+    container_name: schema-registry
+    depends_on:
+      - zookeeper
+      - broker
+    ports:
+      - 8081:8081
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      #SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "PLAINTEXT://broker:29092"
 
 
 
