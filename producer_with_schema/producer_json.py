@@ -1,12 +1,8 @@
 from kafka import KafkaProducer
-from kafka.errors import KafkaError
-from kafka import KafkaClient, KafkaAdminClient
-from kafka.admin import NewTopic
 import logging
 import json
 
 logging.basicConfig(level=logging.DEBUG)
-
 
 if __name__ == "__main__":
     producer = KafkaProducer(
@@ -33,3 +29,4 @@ if __name__ == "__main__":
     producer.close()
 
 # consumer output {"event_id": 123, "website": "https://www.rolex.com/", "name": "John Doe", "action": "click"}
+# json serialization, no schema enforced

@@ -32,20 +32,6 @@ services:
     build: ..
     command: python3 ./producer.py
 
-  schema-registry:
-    image: confluentinc/cp-schema-registry:5.4.1
-    container_name: schema-registry
-    depends_on:
-      - zookeeper
-      - broker
-    ports:
-      - 8081:8081
-    environment:
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      #SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
-      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "PLAINTEXT://broker:29092"
-
-
 
 
 
