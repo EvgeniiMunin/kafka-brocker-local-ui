@@ -22,7 +22,7 @@ if __name__ == "__main__":
     key = str(message["event_id"]).encode("utf-8")
 
     # produce keyed messages to enable hashed partitioning
-    producer.send("quickstart", key=key, value=message)
+    producer.send("test-topic", key=key, value=message)
     print("msgs json sent")
 
     producer.flush()

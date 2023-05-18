@@ -1,10 +1,12 @@
 import csv
-from kafka import KafkaProducer
 import logging
 import json
 import time
+from kafka import KafkaProducer
+from kafka.errors import KafkaError
 
-logging.basicConfig(level=logging.DEBUG)
+
+#logging.basicConfig(level=logging.DEBUG)
 
 
 def read_csv(file_path):
@@ -16,7 +18,22 @@ def read_csv(file_path):
 
 def publish(producer, topic, key, message):
     # produce keyed messages to enable hashed partitioning
-    producer.send("quickstart", key=key, value=message)
+    future = producer.send(topic, key=key, value=message)
+
+    try:
+        record_metadata = future.get(timeout=10)
+        # successful result returns assigned partition and offset
+        print(
+            "topic: ", record_metadata.topic,
+            "partition: ", record_metadata.partition,
+            "offset: ", record_metadata.offset
+        )
+
+    except KafkaError:
+        # decide what to do if produce request failed...
+        logging.exception("Failed to send the message {}".format((key, message)))
+        pass
+
     producer.flush()
     print("msgs json sent")
 
@@ -33,7 +50,7 @@ if __name__ == "__main__":
         print("item: ", i, item)
         publish(
             producer=producer,
-            topic="quickstart",
+            topic="test-topic",
             key=str(i).encode("utf-8"),
             message=item
         )

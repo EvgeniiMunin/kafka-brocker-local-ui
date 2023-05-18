@@ -46,4 +46,4 @@ if __name__ == "__main__":
 
     producer.flush()
 
-# consumer output
+# connection refused error
