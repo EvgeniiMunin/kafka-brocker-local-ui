@@ -44,15 +44,3 @@ services:
       context: .
       dockerfile: Dockerfile_consumer
     command: python3 ./consumer_json.py
-
-#  schema-registry:
-#    image: confluentinc/cp-schema-registry:5.4.1
-#    container_name: schema-registry
-#    depends_on:
-#      - zookeeper
-#      - broker
-#    ports:
-#      - 8081:8081
-#    environment:
-#      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-#      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
